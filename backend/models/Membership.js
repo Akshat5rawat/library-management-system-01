@@ -5,9 +5,9 @@ const membershipSchema = new mongoose.Schema(
         membershipNumber: { type: String, unique: true },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        contactName: { type: String, required: true },
+        contactName: { type: String, required: true, unique: true },
         contactAddress: { type: String, required: true },
-        aadharCardNo: { type: String, required: true },
+        aadharCardNo: { type: String, required: true, unique: true },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
         membershipType: {

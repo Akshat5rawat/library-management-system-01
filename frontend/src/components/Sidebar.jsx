@@ -48,6 +48,9 @@ function Sidebar({ isAdmin }) {
                             <NavLink to="/book/update" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
                                 <span className="nav-icon">🔄</span> Update Book/Movie
                             </NavLink>
+                            <NavLink to="/book/issue" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+                                <span className="nav-icon">📌</span> Issue Book/Movie
+                            </NavLink>
                         </div>
 
                         <div className="nav-section">

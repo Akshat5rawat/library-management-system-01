@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Membership = require('../models/Membership');
+const User = require('../models/User'); // Import User model
 const { protect, adminOnly } = require('../middleware/auth');
 router.get('/', protect, async (req, res) => {
     try {
@@ -26,8 +27,27 @@ router.post('/', protect, adminOnly, async (req, res) => {
     try {
         const membership = new Membership(req.body);
         await membership.save();
-        res.status(201).json(membership);
+
+        // Create the corresponding User account automatically
+        const user = new User({
+            name: `${membership.firstName} ${membership.lastName}`,
+            username: membership.membershipNumber,
+            password: membership.contactName, // Mobile Number as password
+            isAdmin: false
+        });
+        await user.save();
+
+        res.status(201).json({
+            membership,
+            account: {
+                username: user.username,
+                password: membership.contactName // Return raw password to show frontend once
+            }
+        });
     } catch (err) {
+        if (err.code === 11000) {
+            return res.status(400).json({ message: 'Aadhar Card Number or Contact Number already exists in the system.' });
+        }
         res.status(400).json({ message: err.message });
     }
 });

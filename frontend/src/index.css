@@ -1,16 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --primary: #60bc67;
-  --primary-dark: #60bc67;
   --primary-light: #a89eff;
-  
-  --bg-dark: #22242f;
-  --bg-card: #121b15;
-  --bg-surface: #16213e;
-  --bg-hover: #1e2a45;
-  --text-primary: #ffffff;
-  --text-secondary: #ffffff;
+  --bg-dark: #e7e7e7;
+  --bg-card: #e7e7e7;
+  --text-primary: #000000;
+  --text-secondary: #000000;
   --text-muted: #6666aa;
   --border: #2a2a4a;
   --success: #22c55e;
@@ -18,8 +13,6 @@
   --warning: #f59e0b;
   --sidebar-width: 240px;
   --radius: 12px;
-  --shadow: 0 4px 24px rgba(108, 99, 255, 0.15);
-  --shadow-lg: 0 8px 40px rgba(243, 174, 174, 0.4);
 }
 
 *,
@@ -445,7 +438,7 @@ select option {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: #fff;
+  color: #000000;
   box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
 }
 
@@ -620,22 +613,22 @@ tr:hover td {
 }
 
 .badge-success {
-  background: rgba(34, 197, 94, 0.15);
-  color: #86efac;
+  background: color-mix(in srgb, var(--success) 18%, transparent);
+  color: var(--success);
 }
 
 .badge-danger {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--danger);
 }
 
 .badge-warning {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fde68a;
+  background: color-mix(in srgb, var(--warning) 18%, transparent);
+  color: var(--warning);
 }
 
 .badge-purple {
-  background: rgba(108, 99, 255, 0.15);
+  background: color-mix(in srgb, var(--primary-light) 18%, transparent);
   color: var(--primary-light);
 }
 

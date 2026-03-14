@@ -81,7 +81,8 @@ function Login() {
                 </form>
 
                 <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: 'var(--text-muted)' }}>
-                    Default admin: <strong style={{ color: 'var(--primary-light)' }}>admin / admin123</strong>
+                    Default admin: <strong style={{ color: 'var(--primary-light)' }}>adm / adm</strong><br />
+                    Default user: <strong style={{ color: 'var(--primary-light)' }}>user / user</strong>
                 </p>
             </div>
         </div>

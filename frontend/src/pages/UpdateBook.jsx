@@ -7,17 +7,20 @@ const STATUS_OPTIONS = ['available', 'issued', 'lost', 'damaged'];
 
 function UpdateBook() {
     const navigate = useNavigate();
-    const [typeFilter, setTypeFilter] = useState('');
+    const [typeFilter, setTypeFilter] = useState('book');
     const [books, setBooks] = useState([]);
     const [selectedId, setSelectedId] = useState('');
-    const [form, setForm] = useState({ name: '', authorName: '', serialNo: '', status: '', date: '' });
+    const [form, setForm] = useState({ name: '', authorName: '', serialNo: '', status: '', date: '', quantity: 1 });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (!typeFilter) return;
         API.get(`/books?type=${typeFilter}`)
-            .then(({ data }) => { setBooks(data); setSelectedId(''); setForm({ name: '', authorName: '', serialNo: '', status: '', date: '' }); })
+            .then(({ data }) => {
+                setBooks(data);
+                setSelectedId('');
+                setForm({ name: '', authorName: '', serialNo: '', status: '', date: '', quantity: 1 });
+            })
             .catch(() => { });
     }, [typeFilter]);
 
@@ -30,6 +33,7 @@ function UpdateBook() {
             serialNo: book.serialNo,
             status: book.status,
             date: book.dateOfProcurement?.slice(0, 10) || '',
+            quantity: typeof book.quantity === 'number' ? book.quantity : 1,
         });
     };
 
@@ -40,6 +44,8 @@ function UpdateBook() {
         if (!selectedId) return 'Please select a book/movie.';
         if (!form.name || !form.serialNo || !form.status || !form.date) return 'All fields are required.';
         if (typeFilter === 'book' && !form.authorName?.trim()) return 'Author name is required for a book.';
+        const qty = Number(form.quantity);
+        if (!Number.isFinite(qty) || qty < 0) return 'Quantity must be 0 or more.';
         return null;
     };
 
@@ -49,7 +55,14 @@ function UpdateBook() {
         if (err) { setError(err); return; }
         setLoading(true); setError('');
         try {
-            await API.put(`/books/${selectedId}`, { name: form.name, authorName: form.authorName, serialNo: form.serialNo, status: form.status, dateOfProcurement: form.date });
+            await API.put(`/books/${selectedId}`, {
+                name: form.name,
+                authorName: form.authorName,
+                serialNo: form.serialNo,
+                status: form.status,
+                dateOfProcurement: form.date,
+                quantity: Number(form.quantity),
+            });
             navigate('/confirmation');
         } catch (err) {
             setError(err.response?.data?.message || 'Update failed.');
@@ -77,27 +90,28 @@ function UpdateBook() {
                             <label>Type *</label>
                             <div className="radio-row" style={{ marginTop: '8px' }}>
                                 <label className={`radio-label${typeFilter === 'book' ? ' selected' : ''}`}>
-                                    <input type="radio" name="typeFilter" value="book" defaultChecked={true} onChange={(e) => setTypeFilter(e.target.value)} />
+                                    <input type="radio" name="typeFilter" value="book" checked={typeFilter === 'book'} onChange={(e) => setTypeFilter(e.target.value)} />
                                     📖 Book
                                 </label>
                                 <label className={`radio-label${typeFilter === 'movie' ? ' selected' : ''}`}>
-                                    <input type="radio" name="typeFilter" value="movie" onChange={(e) => setTypeFilter(e.target.value)} />
+                                    <input type="radio" name="typeFilter" value="movie" checked={typeFilter === 'movie'} onChange={(e) => setTypeFilter(e.target.value)} />
                                     🎬 Movie
                                 </label>
                             </div>
                         </div>
 
-                        {books.length > 0 && (
-                            <div className="form-group" style={{ marginBottom: '20px' }}>
-                                <label>Book / Movie Name *</label>
-                                <select value={selectedId} onChange={(e) => handleSelect(e.target.value)}>
-                                    <option value="">— Select —</option>
-                                    {books.map((b) => (
-                                        <option key={b._id} value={b._id}>{b.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
+                        <div className="form-group" style={{ marginBottom: '20px' }}>
+                            <label>{typeFilter === 'book' ? 'Book Name *' : 'Movie Name *'}</label>
+                            <select value={selectedId} onChange={(e) => handleSelect(e.target.value)}>
+                                <option value="">— Select —</option>
+                                {books.map((b) => (
+                                    <option key={b._id} value={b._id}>{b.name}</option>
+                                ))}
+                            </select>
+                            {books.length === 0 && (
+                                <p className="form-note">No {typeFilter === 'book' ? 'books' : 'movies'} found.</p>
+                            )}
+                        </div>
 
                         {selectedId && (
                             <div className="form-grid">
@@ -121,6 +135,10 @@ function UpdateBook() {
                                         <option value="">— Select Status —</option>
                                         {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                                     </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Quantity *</label>
+                                    <input type="number" min="0" name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" />
                                 </div>
                                 <div className="form-group">
                                     <label>Date *</label>

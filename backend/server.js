@@ -12,11 +12,13 @@ const authRoutes = require('./routes/auth');
 const membershipRoutes = require('./routes/membership');
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
+const issueRoutes = require('./routes/issue');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/memberships', membershipRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/issues', issueRoutes);
 
 app.get('/', (req, res) => {
   res.send('library management system');

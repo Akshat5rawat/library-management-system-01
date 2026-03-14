@@ -6,6 +6,7 @@ import AddMembership from './pages/AddMembership';
 import UpdateMembership from './pages/UpdateMembership';
 import AddBook from './pages/AddBook';
 import UpdateBook from './pages/UpdateBook';
+import IssueBook from './pages/IssueBook';
 import UserManagement from './pages/UserManagement';
 import Confirmation from './pages/Confirmation';
 import Cancel from './pages/Cancel';
@@ -20,17 +21,18 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/logout" element={<Logout />} />
 
-      {}
+      { }
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/membership/add" element={<AddMembership />} />
         <Route path="/membership/update" element={<UpdateMembership />} />
         <Route path="/book/add" element={<AddBook />} />
         <Route path="/book/update" element={<UpdateBook />} />
+        <Route path="/book/issue" element={<IssueBook />} />
         <Route path="/user-management" element={<UserManagement />} />
       </Route>
 
-      {}
+      { }
       <Route element={<PrivateRoute />}>
         <Route path="/home" element={<UserHome />} />
       </Route>
