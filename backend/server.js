@@ -18,6 +18,10 @@ app.use('/api/memberships', membershipRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/users', userRoutes);
 
+app.get('/', (req, res) => {
+  res.send('library management system');
+});
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
