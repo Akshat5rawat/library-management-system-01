@@ -25,10 +25,10 @@ function AdminHome() {
     }, []);
 
     const cards = [
-        { icon: '🪪', label: 'Total Memberships', value: stats.memberships, color: 'rgba(108,99,255,0.2)' },
-        { icon: '📖', label: 'Total Books', value: stats.books, color: 'rgba(34,197,94,0.2)' },
-        { icon: '🎬', label: 'Total Movies', value: stats.movies, color: 'rgba(255,101,132,0.2)' },
-        { icon: '👥', label: 'Total Users', value: stats.users, color: 'rgba(245,158,11,0.2)' },
+        { icon: '🪪', label: 'Total Memberships', value: stats.memberships, color: 'color-mix(in srgb, var(--primary) 16%, transparent)' },
+        { icon: '📖', label: 'Total Books', value: stats.books, color: 'color-mix(in srgb, var(--success) 16%, transparent)' },
+        { icon: '🎬', label: 'Total Movies', value: stats.movies, color: 'color-mix(in srgb, var(--primary-light) 18%, transparent)' },
+        { icon: '👥', label: 'Total Users', value: stats.users, color: 'color-mix(in srgb, var(--warning) 16%, transparent)' },
     ];
 
     return (
