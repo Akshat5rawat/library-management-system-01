@@ -64,7 +64,7 @@ function Sidebar({ isAdmin }) {
                             <div className="nav-section-title">Reports</div>
                             <NavLink to="/Reports" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
                                 <span className="nav-icon">📊</span>Reports
-                            </NavLink>  
+                            </NavLink>
                         </div>
                     </>
                 )}

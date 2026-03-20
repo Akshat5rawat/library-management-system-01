@@ -1,25 +1,121 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
+import API from '../api/axios';
 
-const reportTabs = [
-  'masterBooks',
-  'masterMovies',
-  'masterMembership',
-  'activeIssues',
-  'overdueReturn',
-  'issueRequests',
-];
+const formatDate = (d) => {
+  if (!d) return '-';
+  const dt = new Date(d);
+  return Number.isNaN(dt.getTime()) ? '-' : dt.toLocaleDateString();
+};
 
 function Reports() {
   const [activeTab, setActiveTab] = useState('masterBooks');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Keep arrays empty for now; connect to API later.
-  const masterBooks = [];
-  const masterMovies = [];
-  const masterMembership = [];
-  const activeIssues = [];
-  const overdueReturn = [];
-  const issueRequests = [];
+  const [masterBooks, setMasterBooks] = useState([]);
+  const [masterMovies, setMasterMovies] = useState([]);
+  const [masterMembership, setMasterMembership] = useState([]);
+  const [activeIssues, setActiveIssues] = useState([]);
+  const [overdueReturn, setOverdueReturn] = useState([]);
+  const [issueRequests, setIssueRequests] = useState([]);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const [booksRes, moviesRes, membershipsRes, activeIssuesRes, allIssuesRes] =
+          await Promise.all([
+            API.get('/books?type=book'),
+            API.get('/books?type=movie'),
+            API.get('/memberships'),
+            API.get('/issues'),
+            API.get('/issues?all=true'),
+          ]);
+
+        setMasterBooks(
+          (booksRes.data || []).map((b) => ({
+            serialNo: b.serialNo,
+            name: b.name,
+            authorName: b.authorName || '-',
+            category: b.type,
+            status: b.status,
+            cost: '-',
+            procurementDate: formatDate(b.dateOfProcurement),
+          }))
+        );
+
+        setMasterMovies(
+          (moviesRes.data || []).map((m) => ({
+            serialNo: m.serialNo,
+            name: m.name,
+            authorName: m.authorName || '-',
+            category: m.type,
+            status: m.status,
+            cost: '-',
+            procurementDate: formatDate(m.dateOfProcurement),
+          }))
+        );
+
+        const now = new Date();
+        setMasterMembership(
+          (membershipsRes.data || []).map((mem) => ({
+            membershipId: mem.membershipNumber,
+            memberName: `${mem.firstName} ${mem.lastName}`,
+            contactNumber: mem.contactName,
+            contactAddress: mem.contactAddress,
+            aadharCardNo: mem.aadharCardNo,
+            startDate: formatDate(mem.startDate),
+            endDate: formatDate(mem.endDate),
+            status: new Date(mem.endDate) >= now ? 'Active' : 'Inactive',
+            amountPending: '-',
+          }))
+        );
+
+        setActiveIssues(
+          (activeIssuesRes.data || []).map((issue) => ({
+            serialNo: issue.book?.serialNo || '-',
+            name: issue.book?.name || '-',
+            membershipId: issue.user?.username || '-',
+            issueDate: formatDate(issue.issueDate),
+            returnDate: issue.isReturned ? formatDate(issue.returnDate) : '-',
+          }))
+        );
+
+        const allIssues = allIssuesRes.data || [];
+
+        setOverdueReturn(
+          allIssues
+            .filter((issue) => !issue.isReturned && (issue.overdueDays > 0 || issue.fine > 0))
+            .map((issue) => ({
+              serialNo: issue.book?.serialNo || '-',
+              bookName: issue.book?.name || '-',
+              membershipId: issue.user?.username || '-',
+              issueDate: formatDate(issue.issueDate),
+              returnDate: issue.isReturned ? formatDate(issue.returnDate) : '-',
+              fine: `₹${issue.fine ?? 0}`,
+            }))
+        );
+
+        setIssueRequests(
+          allIssues.map((issue) => ({
+            membershipId: issue.user?.username || '-',
+            itemName: issue.book?.name || '-',
+            requestedDate: formatDate(issue.issueDate),
+            fulfilledDate: issue.isReturned ? formatDate(issue.returnDate) : '-',
+          }))
+        );
+      } catch (err) {
+        setError('Failed to load report data. Please try again.');
+        console.error('Reports fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAll();
+  }, []);
 
   const renderNoData = (colSpan) => (
     <tr>
@@ -39,6 +135,13 @@ function Reports() {
           <p>Library report dashboard</p>
         </div>
 
+        {error && <div className="alert alert-error">⚠️ {error}</div>}
+
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+            ⏳ Loading report data...
+          </div>
+        ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '20px' }}>
           <aside className="form-card" style={{ height: 'fit-content' }}>
             <h2 style={{ marginBottom: '12px' }}>Report</h2>
@@ -262,6 +365,7 @@ function Reports() {
             )}
           </section>
         </div>
+        )}
       </main>
     </div>
   );
