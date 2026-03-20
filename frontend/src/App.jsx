@@ -13,6 +13,7 @@ import Cancel from './pages/Cancel';
 import Logout from './pages/Logout';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
         <Route path="/book/update" element={<UpdateBook />} />
         <Route path="/book/issue" element={<IssueBook />} />
         <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/reports" element={<Reports />} />
+
       </Route>
 
       { }
