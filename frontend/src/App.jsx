@@ -13,6 +13,7 @@ import Cancel from './pages/Cancel';
 import Logout from './pages/Logout';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/membership/add" element={<AddMembership />} />
         <Route path="/membership/update" element={<UpdateMembership />} />
+        <Route path="/Reports" element={<Reports />} />
         <Route path="/book/add" element={<AddBook />} />
         <Route path="/book/update" element={<UpdateBook />} />
         <Route path="/book/issue" element={<IssueBook />} />
