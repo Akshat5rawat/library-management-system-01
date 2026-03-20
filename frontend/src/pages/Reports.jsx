@@ -105,7 +105,7 @@ function Reports() {
           dueDate.setDate(dueDate.getDate() + 15);
           const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
           const fine = daysOverdue * 5; 
-          const membershipNumber = issue.membershipNumber?.username || '-'; 
+          const membershipNumber = issue.user?.username || '-'; 
           return {
             serialNo: issue.book?.serialNo || '-',
             name: issue.book?.name || '-',
