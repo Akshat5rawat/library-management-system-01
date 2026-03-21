@@ -5,7 +5,7 @@ import API from '../api/axios';
 
 function AddBook() {
     const navigate = useNavigate();
-    const [form, setForm] = useState({ type: '', name: '', authorName: '', dateOfProcurement: '', quantity: 1 });
+    const [form, setForm] = useState({ type: 'book', name: '', authorName: '', dateOfProcurement: '', quantity: 1 });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -57,11 +57,11 @@ function AddBook() {
                             <label>Type *</label>
                             <div className="radio-row" style={{ marginTop: '8px' }}>
                                 <label className={`radio-label${form.type === 'book' ? ' selected' : ''}`}>
-                                    <input type="radio" name="type" value="book" defaultChecked={true} onChange={handleChange} />
+                                    <input type="radio" name="type" value="book" checked={form.type === 'book'} onChange={handleChange} />
                                     📖 Book
                                 </label>
                                 <label className={`radio-label${form.type === 'movie' ? ' selected' : ''}`}>
-                                    <input type="radio" name="type" value="movie" onChange={handleChange} />
+                                    <input type="radio" name="type" value="movie" checked={form.type === 'movie'} onChange={handleChange} />
                                     🎬 Movie
                                 </label>
                             </div>

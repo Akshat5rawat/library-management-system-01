@@ -21,6 +21,8 @@ function App() {
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/logout" element={<Logout />} />
+      <Route path="/reports" element={<Reports />} />
+
 
       { }
       <Route element={<AdminRoute />}>
@@ -31,7 +33,6 @@ function App() {
         <Route path="/book/update" element={<UpdateBook />} />
         <Route path="/book/issue" element={<IssueBook />} />
         <Route path="/user-management" element={<UserManagement />} />
-        <Route path="/reports" element={<Reports />} />
 
       </Route>
 
